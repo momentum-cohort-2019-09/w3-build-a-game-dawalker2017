@@ -1,13 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-  <script src="keyboarder.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="game.js" defer></script>
 </head>
+
 <body>
-  
+    <div class="wrapper">
+        <div class="gamecontainer">
+            <div class="game">
+                <canvas id="myGame" width="400" height="300">
+             </canvas>
+            </div>
+            <div class="relativeContainer">
+                <img id="gameboyLogo" src="https://i-love-png.com/images/f5bc0e352af6fd10eeddb1a190d8013b.png">
+                <div class="buttonShadow"></div>
+                <img id="dpad" src="https://static.thenounproject.com/png/1407690-200.png">
+                <div class="aButton"></div>
+                <div class="bButton"></div>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>
