@@ -1,4 +1,4 @@
-//==================================================================//==================================================================//
+// ~==================================================================~ // ~==================================================================~ //
 const colors = {
     sky: '#5497A7',
     cloud: '#EBEBD3',
@@ -7,11 +7,18 @@ const colors = {
     enemy: '#FF3C38',
 }
 
+const playerImg = 'player.png';
+// const pelicanImg = 
+
+// ** add Sound file for jump. ** //
+// ** add Sound file for ded. ** //
+
 //========================================================================================|GAME|============================//
 class Game {
     constructor(canvasId) {
         const canvas = document.getElementById(canvasId)
         this.screen = canvas.getContext('2d')
+        this.ctx = canvas.getContext('2d')
         this.size = { width: canvas.width, height: canvas.height }
         this.groundY = Math.floor(this.size.height * 0.8)
         this.runSpeed = 1
@@ -19,6 +26,7 @@ class Game {
         this.ticksSinceEnemy = 0
         this.keyboard = new Keyboarder()
         this.gameOver = false
+            // this.deadSound = new Audio('assets/x')
 
         let playerSize = {
             width: 20,
@@ -52,8 +60,13 @@ class Game {
         tick()
     }
 
+    //----------------------------------------------|GAME_ENTITIES|-----------------//
     addEnemy() {
         this.addBody(new Enemy({ x: this.size.width, y: this.groundY - 15 }, { width: 30, height: 30 }))
+    }
+
+    addPelican() {
+        this.addBody(new Pelican({ x: this.size.width, y: this.goundY - 15 }, { width: 70, height: 70 }))
     }
 
     addClouds() {
@@ -64,6 +77,8 @@ class Game {
 
     //----------------------------------------------|GAME_UPDATE|-------------------//
     update() {
+        // ** runningSpeed can be used to enable the game to be faster over time. ** //
+        // this.runningSpeed += (X)
         const enemyOccurance = this.ticksSinceEnemy * 0.0001
         if (Math.random() < enemyOccurance) {
             this.addEnemy()
@@ -80,12 +95,12 @@ class Game {
             body.update(this)
             if (colliding(this.player, body)) {
                 this.gameOver = true
+                    // this.deadSound.play()
             }
         }
 
         this.bodies = this.bodies.filter(bodyOnScreen)
     }
-
 
     //----------------------------------------------|GAME_DRAW|---------------------//
     draw() {
@@ -134,6 +149,12 @@ class Player {
         this.startingY = center.y
         this.velocityY = 0
         this.jumping = false
+        this.imageLoaded = false
+        this.image = new Image(size.x, size.y)
+        this.image.addEventListener('load', () => {
+            this.imageLoaded = true;
+        })
+        this.image.src = 'playerImg'
     }
 
     //----------------------------------------------|PLAYER_UPDATE|–----------------//
@@ -146,25 +167,36 @@ class Player {
                 this.center.y = this.startingY
                 this.velocityY = 0
                 this.jumping = false
+                    // this.jumpSound = new Audio('assets/x')
             }
         }
 
         if (game.keyboard.isDown(Keyboarder.KEYS.S) && !this.jumping) {
+            // this.jumpSound.play()
             this.jumping = true
             this.velocityY = 15
         }
-
     }
-
 
     //----------------------------------------------|PLAYER_DRAW|-------------------//
     draw(screen) {
-        screen.fillStyle = colors.person
-        screen.fillRect(
-            this.center.x - (this.size.width / 2),
-            this.center.y, -(this.size.height / 2),
-            this.size.width, this.size.height)
-
+        if (this.imageLoaded) {
+            this.game.ctx.save()
+            this.game.ctx.drawImage(
+                this.image,
+                this.center.x - this.size.x / 2,
+                this.center.y - this.size.y / 2,
+                this.size.x,
+                this.size.y
+            );
+            this.game.screen.restore()
+        }
+        //     screen.fillStyle = colors.person
+        //     screen.fillRect(
+        //         this.center.x - (this.size.width / 2),
+        //         this.center.y - (this.size.height / 2),
+        //         this.size.width, this.size.height)
+        // }
     }
 }
 
@@ -185,8 +217,36 @@ class Enemy {
         screen.fillStyle = colors.enemy
         screen.fillRect(
             this.center.x - (this.size.width / 2),
-            this.center.y, -(this.size.height / 2),
+            this.center.y - (this.size.height / 2),
             this.size.width, this.size.height)
+    }
+}
+
+//========================================================================================|PELICAN|======================//
+class Pelican {
+    constructor(game, center, size) {
+        this.center = center
+        this.size = size
+        this.imageLoaded = false
+        this.image = new Image(size.x, size.y)
+        this.image.addEventListener('load', () => {
+            this.imageLoaded = true
+            this.image.src = 'pelicanImg';
+            screen.drawImage('pelicanImg');
+        })
+    }
+
+
+    //----------------------------------------------|PELICAN_DRAW|--------------------//
+    draw(screen) {
+        if (this.imageLoaded) {
+            this.game.screen.drawImage(
+                this.image,
+                this.center.x - (this.size.x / 2),
+                this.center.y - (this.size.y / 2),
+                this.size.x, this.size.y
+            );
+        }
     }
 }
 
@@ -234,11 +294,10 @@ function colliding(b1, b2) {
     )
 }
 
-
 Keyboarder.KEYS = { LEFT: 37, RIGHT: 39, UP: 38, DOWN: 40, S: 83, SPACE: 32 }
 
 //==========================================================================================================================//
 const game = new Game('myGame')
 game.run()
 
-//==================================================================//==================================================================//
+// ~==================================================================~ // ~==================================================================~ //
