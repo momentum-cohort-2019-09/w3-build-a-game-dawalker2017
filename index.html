@@ -6,14 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="style.css">
-    <script src="game.js" defer></script>
 </head>
 
 <body>
+    <audio id="deathSound" src="assets/death.mp3"></audio>
+    <audio id="jumpSound" src="assets/jump.mp3"></audio>
     <div class="wrapper">
         <div class="gamecontainer">
             <div class="game">
-                <canvas id="myGame" width="400" height="300" defer></canvas>
+                <canvas id="myGame" width="400" height="300" defer>
+                </canvas>
             </div>
             <div class="relativeContainer">
                 <img id="gameboyLogo" src="https://i-love-png.com/images/f5bc0e352af6fd10eeddb1a190d8013b.png">
@@ -24,6 +26,7 @@
             </div>
         </div>
     </div>
+    <script src="game.js" defer></script>
 </body>
 
 </html>
